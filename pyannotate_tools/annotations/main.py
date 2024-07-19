@@ -57,7 +57,11 @@ def generate_annotations_json_string(source_path, only_simple=False):
     items = parse_json(source_path)
     results = []
     for item in items:
-        signature = unify_type_comments(item.type_comments)
+        try:
+            signature = unify_type_comments(item.type_comments)
+        except Exception as e:
+            print(f"skipping {item.func_name} due to {item.type_comments}")
+            continue
         if is_signature_simple(signature) or not only_simple:
             data = {
                 'path': item.path,
